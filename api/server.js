@@ -11,9 +11,10 @@ const cors = require('cors');
 const morgan = require('morgan');
 
 //2-GLOBAL MIDDLEWARE
-server.use(helmet());
+server.use(helmet());           //3rd-party middleware
 server.use(cors());
 server.use(morgan('dev'));
+server.use(express.json());     //build-in middleware
 
 
 //3-ROUTER
