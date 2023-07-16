@@ -1,6 +1,6 @@
 const server =require("./api/server");
 
-const port=9000;
+const {PORT} =require('./config')
 
 server.listen(port, () =>{
     console.log(`Server listenin on ${port}`);

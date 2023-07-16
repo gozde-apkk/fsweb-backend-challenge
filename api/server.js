@@ -4,7 +4,7 @@
 const express = require("express");
 //express kullanarak server instance yarat
 const server = express();
-
+require('dotenv').config();
 
 
 //2-GLOBAL MIDDLEWARE
