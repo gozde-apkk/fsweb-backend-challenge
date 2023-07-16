@@ -5,10 +5,15 @@ const express = require("express");
 //express kullanarak server instance yarat
 const server = express();
 require('dotenv').config();
-
+//headerdeki başlıkları gizler
+const helmet = require('helmet');
+const cors = require('cors');
+const morgan = require('morgan');
 
 //2-GLOBAL MIDDLEWARE
-
+server.use(helmet());
+server.use(cors());
+server.use(morgan('dev'));
 
 
 //3-ROUTER
