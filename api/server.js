@@ -24,7 +24,11 @@ server.get("/", (req,res) =>{
 
 
 //4-ERROR MIDDLEWARE
-
+server.use((err,req,res,next) =>{
+    res
+       .status(err.status || 500)
+       .json({message :err.message || 'Server error!...'})
+})
 
 //5-EXPORT
 
