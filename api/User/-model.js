@@ -2,9 +2,9 @@
 const db =require('../../data/db-config');
 //kullanıcıyı veritabanından al
 function getAll  () {
-    return db("users as u").join("roles", "u.role_id", "r.role_id")
-    .select(
-            "u.id",
+    return db("users as u").join("roles as r", "u.role_id", "r.role_id")      //     select*from users as u 
+    .select(                                                                  //     join roles as r 
+            "u.user_id",                                                       //    on u.role_id = r.role_id
             "name",
             "username",
             "password",
@@ -15,44 +15,46 @@ function getAll  () {
 
 //idil ebul
 function getById (id) {
-    return db('Users as u')
-    .join("roles" , "u.role_id","r.role_id")
-    .where("user_id", user_id )
-    .select(
-        "u.user_id",
-        "u.user_name",
-        "u.email",
-        "r.rolename as role_name"
-    ).first(); 
+    return db('users as u').where("u.id",id).first(); 
 }
 //filtreleyerek ara
 function getByFilter(filter) {
-    return db('Users as u')
-    .join("roles" , "u.role_id","r.role_id")
+    return db('users as u')
     .where(filter )
     .select(
-        "u.user_id",
-        "u.user_name",
-        "u.email",
-        "r.rolename as role_name"
-    );
+        "u.id",
+        "name",
+        "email",
+        "password"
+    )
+    .first();
   }
-
+function getByEmail(email){
+  return db('users as u')
+  .where("email",email)
+  .select(
+      "u.id",
+      "name",
+      "email",
+      "password"
+  )
+  .first();
+}
 //kullanıcıyı sil
   async function removeUser(id) {
-    return await db('users').where("user_id", id).delete();
+    return await db('users as u').where("u.id", id).delete();
 };
 //kullanıcı ekle
 async function insertUser(payload) {
-  const [ids] = await db("users").insert(payload);
-  return getById[ids];
+  const [id] = await db("users").insert(payload);
+  return getById(id);
 };
 //kullanıcıyı güncellet
 async function updateUser(id, payload) {
-    return await db('users').where("user_id", id).update(payload);
+    return await db('users as u ').where("u.id", id).update(payload);
 };
 async function findUser(username, password){
     let existUser = allUser.find(x=>x.username == username && x.password == password);
     return existUser
 }
-module.exports = {getAll, getById , getByFilter,removeUser,updateUser,insertUser}
+module.exports = {getAll,getByEmail, getById , getByFilter,removeUser,updateUser,insertUser}

@@ -1,5 +1,30 @@
 const UserModel = require('./-model');
 
+const payloadCheck = (req,res,next)=>{
+  const {username,  name ,email ,password} = req.body;
+  if(!name || !name.trim() || name.lenght <=3){
+    next({status:400 , message:"Name alanı 3 karakterden büyük olmalı..."})
+  }else if(!email || !email.trim() || email.lenght <=3){
+    next({status:400 , message:"Geçerli bi email giriniz..."})
+  }else if(!username || !username.trim() || username.lenght <=3){
+    next({status:400 , message:"Username alanı 3 karakterden büyük olmalı..."})
+  }else if(!password || !password.trim() || password.lenght <=3){
+    next({status:400 , message:"Password alanı 3 karakterden büyük olmalı..."})
+  }else{
+    next();
+  }
+} 
+
+const isValidEmail = (email) => {
+  return String(email)
+      .toLowerCase()
+      .match(
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      );
+}
+
+
+
 
 async function validateUserId(req, res, next) {
     
@@ -30,4 +55,4 @@ async function validateLogin(req,res,next){
     }
 }
 
-module.exports ={validateUserId, validateLogin}
+module.exports ={validateUserId, validateLogin,payloadCheck,isValidEmail}

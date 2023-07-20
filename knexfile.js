@@ -9,7 +9,7 @@ const sharedConfig = {
   useNullAsDefault: true,
   migrations: { directory: './data/migrations' },
   seeds: { directory: './data/seeds' },
-  pool: { afterCreate: (conn, done) => conn.run('PRAGMA foreign_keys = ON', done) },
+  pool: { afterCreate: (conn, done) => conn.run('PRAGMA foreign_keys = OFF', done) },
 }
 
 module.exports = {

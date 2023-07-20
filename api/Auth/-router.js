@@ -1,17 +1,16 @@
 
 
 const router = require("express").Router();
-const JWT_SECRET =process.env.JWT_SECRET || 'ssh'
 const mw = require('./-middleware');
 const bcrypt = require('bcryptjs');
 const userModel = require('../User/-model');
-const jwt= require('jsonwebtoken');
 const {HASH_ROUND}= require("../../config");
+const umw = require('../User/-middleware');
 
 
 
 router.post(
-    "/register",
+    "/register", umw.payloadCheck,
     async (req, res, next) => {
       try {
         const model = {
@@ -38,9 +37,11 @@ router.post(
     try{
       const {email , password} = req.body;
       const registeredUser = await userModel.getByEmail(email)
+      console.log(registeredUser);
       if(registeredUser &&  bcrypt.compareSync(password, registeredUser.password)){
-        
-        res.json({message: `"Welcome back ${registeredUser.name}`})
+        const token =mw.generateToken(registeredUser)
+        console.log(token);
+        res.json({message: `"Welcome back ${registeredUser.name} `, "token": token})
       }else{
         next({status:401, message:"Invalid credentials"})
       }
