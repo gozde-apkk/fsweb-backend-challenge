@@ -9,7 +9,13 @@ require('dotenv').config();
 const helmet = require('helmet');
 const cors = require('cors');
 const morgan = require('morgan');
+const {restricted} = require('./Auth/-middleware');
 
+
+const authRouter = require('./Auth/-router');
+const userRouter = require('./User/-router');
+const postRouter = require("./Tweet/-router");
+const commentRouter = require("./Comment/-router");
 //2-GLOBAL MIDDLEWARE
 server.use(helmet());           //3rd-party middleware
 server.use(cors());
@@ -22,6 +28,10 @@ server.get("/", (req,res) =>{
     res.json({message:"Server up and running..."})
 })
 
+server.use('/api/auth', authRouter);
+server.use('/api/users', restricted, userRouter);
+server.use("/api/posts", postRouter);
+server.use("/api/comments", commentRouter);
 
 
 //4-ERROR MIDDLEWARE
