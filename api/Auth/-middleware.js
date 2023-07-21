@@ -7,7 +7,8 @@ const generateToken = async (user) => {
   const payload = {
       id: user.user_id,
       name:user.username,
-      role: user.role_name
+      role: user.role_name,
+      post : user.post_id,
   }
   const options = {
       expiresIn: "3h"
