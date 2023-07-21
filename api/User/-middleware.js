@@ -15,14 +15,6 @@ const payloadCheck = (req,res,next)=>{
   }
 } 
 
-const isValidEmail = (email) => {
-  return String(email)
-      .toLowerCase()
-      .match(
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-      );
-}
-
 
 
 
@@ -42,17 +34,5 @@ async function validateUserId(req, res, next) {
     }
   }
 
-async function validateLogin(req,res,next){
-    try{
-        let existUser = await UserModel.findUser(req.body.username, req.body.password);
-        if(!existUser){
-            res.status(404).json({
-                message:"Böyle bir kullanıcı yok"
-            })
-        }
-    }catch(err){
-        next(err);
-    }
-}
 
-module.exports ={validateUserId, validateLogin,payloadCheck,isValidEmail}
+module.exports ={validateUserId,payloadCheck}

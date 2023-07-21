@@ -23,7 +23,7 @@ router.get("/:id" ,mw.validateUserId, async (req,res,next)=>{
   }
 })
 
-router.delete("/:id" ,async (req,res,next)=>{
+router.delete("/:id",mw.validateUserId,async (req,res,next)=>{
   try{
     const {id} = req.params;
     const  count = await userModel.removeUser(id);
@@ -49,13 +49,4 @@ router.put("/:id" ,async (req,res,next)=>{
     }
 })
 
-
-  router.get("/login",  async (req, res, next) => {
-    const user_id = await req.decodeToken.user_id;
-    Users.findUserById(user_id)
-      .then((user) => {
-        res.json(user);
-      })
-      .catch(next);
-  });
 module.exports = router;

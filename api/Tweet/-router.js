@@ -4,6 +4,8 @@ const { payloadCheck, checkOwnPost } = require("./-middleware");
 const Posts = require("./-model");
 const mw = require("../Auth/-middleware");
 
+
+
 router.get("/", async(req, res, next) => {
  try{
   const allPosts = await Posts.getPosts();
@@ -15,6 +17,9 @@ router.get("/", async(req, res, next) => {
  }
 });
 
+
+
+
 router.get("/:id", async (req, res) => {
   const postId = req.params.id;
   try {
@@ -22,14 +27,17 @@ router.get("/:id", async (req, res) => {
     if (post) {
       res.json(post);
     } else {
-      res.status(404).json({ message: "Post bulunamadı." });
+      res.status(404).json({ message: `Tweeet id ${req.params.id} not found` });
     }
   } catch (error) {
-    res.status(500).json({ message: "Postu getirirken bir hata oluştu." });
+    res.status(500).json({ message: "An error occurred while fetching the comment.." });
   }
  });
 
-router.post("/", mw.restricted, async (req, res, next) => {
+
+
+
+router.post("/", mw.restricted,payloadCheck, async (req, res, next) => {
   const {content} = req.body;
   const post = {content, user_id:req.decodedToken.user_id};
   
@@ -43,16 +51,20 @@ router.post("/", mw.restricted, async (req, res, next) => {
 
 
 // PUT /posts/:id
-router.put("/:id",  async (req, res) => {
+router.put("/:id", mw.restricted, payloadCheck,  async (req, res) => {
   const postId = req.params.id;
   const { content } = req.body;
-  const { user_id } = req. decodedToken.subject;
-  const post = { content, user_id };
+
   try {
-    const updatedPost = await postModel.updatePost(postId, post);
-    res.status(200).json(updatedPost);
-  } catch (error) {
-    res.status(500).json({ message: "Post güncellenirken bir hata oluştu." });
+    const updatedPost = await Posts.updatePost(postId, content);
+    if (updatedPost) {
+      res.json({ message: `Tweet id ${postId}, updated...` })
+    } else {
+      res.status(400).json({ message: `Error in updating TweetpostId ${postId}!..` })
+    }
+
+   } catch (error) {
+         next(env);
   }
 });
 
@@ -65,9 +77,9 @@ router.delete(
     try {
       if (deleted) {
         await Posts.remove(req.params.post_id);
-        res.json({ message: `${req.params.post_id} post silindi`});
+        res.json({ message: `Tweet id ${req.params.post_id}, deleted.. `});
       } else {
-        next({ status: 404, message: "Böyle bir post yok" });
+        next({ status: 404, message: `Error in deleting tweet id ${req.params.id}!..`  });
       }
     } catch (error) {
       next(error);

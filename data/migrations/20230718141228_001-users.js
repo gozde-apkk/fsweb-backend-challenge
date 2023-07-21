@@ -27,7 +27,7 @@ exports.up = function(knex) {
                 .inTable("users")
          })
          .createTable("comments", (table) => {
-          table.increments().primary();
+          table.increments("comment_id").primary();
           table
             .integer("user_id")
             .unsigned()

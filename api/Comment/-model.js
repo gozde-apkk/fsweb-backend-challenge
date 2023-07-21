@@ -15,16 +15,21 @@ const getCommentById = async function (id) {
 const getCommentByPostId = async function(post_id){
 return await db("comments").where({post_id : post_id}).first();
 }
-/*
-const insertComment = async function (comment) {
- const [id] = await db("comments").insert({comment:comment}).returning("comment_id");
 
-  return getCommentById(id.comment_id);
+const insertComment = async function (comment) {
+ const [id] = await db("comments").insert(comment).then(ids => ({id : ids[0]}));
+ return await getCommentById(id);
 };
-*/
+
+
 const updateComment = async (id, payload) => {
-  return await db("comments as c").where("c.id",id).update(payload);
+  await db("comments").where("comment_id",id).update(payload)
+ return getCommentById(id);
  
 };
 
-module.exports = {getAllComments, updateComment, getCommentById,getCommentByPostId };
+async function removeComment(comment_id) {
+  return await db('comments').where("comment_id", comment_id).delete();
+};
+
+module.exports = {getAllComments, updateComment, getCommentById,getCommentByPostId,insertComment ,removeComment};

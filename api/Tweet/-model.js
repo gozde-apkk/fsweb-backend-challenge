@@ -22,9 +22,8 @@ async function getPostById(id) {
   const remove = async function (id) {
     return db("posts as p").where("id", id).del();
   };
-  const updatePost = async function (payload){
-    const [id] = await db("users").insert(payload);
-    return getPostById(id);
+  const updatePost = async function (id, payload){
+    return await db('post as p ').where("p.id", id).update(payload);
   }
   module.exports = { insertPost, getPostById, getPosts, remove ,updatePost};
 
